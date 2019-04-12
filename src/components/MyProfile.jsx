@@ -17,6 +17,7 @@ import { currentUserInformation, addToCurrentUserPosts } from '../actions';
 import { withRouter } from 'react-router-dom';
 import Post from '../model/post';
 import Tag from '../model/tag';
+import Like from '../model/like';
 import _ from 'lodash';
 const uuidv4 = require('uuid/v4');
 
@@ -39,6 +40,7 @@ class MyProfile extends Component {
             displayReplies: false,
             commentTimes: [],
             commentIDAndName: {},
+            displayLiked: false
         };
         this.handleNewStatusChange = this.handleNewStatusChange.bind(this);
         this.handleNewStatusSubmit = this.handleNewStatusSubmit.bind(this);
@@ -197,6 +199,7 @@ class MyProfile extends Component {
             displayPosts: false,
             displayComments: false,
             displayReplies: false, 
+            displayLiked: false
         });
         if (filterOption === 'posts') {
             this.fetchData()
@@ -214,12 +217,14 @@ class MyProfile extends Component {
             } catch (e) {
                 console.log(`Couldn't fetch postids. message: ${e}`)
             }
+            console.log({postIdAndName, postTimes: postTimes.reverse()})
             return this.setState({
                 isLoading: false,
                 commentTimes: postTimes.reverse(),
                 commentIDAndName: postIdAndName,
                 displayComments: true,
                 displayReplies: false,
+                displayLiked: false
             })
         } else if (filterOption === 'replies') {
             let postTimes = [];
@@ -241,7 +246,35 @@ class MyProfile extends Component {
                 commentIDAndName: postIdAndName,
                 displayComments: false,
                 displayReplies: true,
+                displayLiked: false
             })
+        }
+        else if (filterOption === 'liked') {
+            let postTimes = [];
+            let postIdAndName = {}
+            try {
+                let postsLikedByUser = await Like.fetchList({ username: this.props.curUserInfo.username, liked: true }, { decrypt: true })
+                console.log({postsLikedByUser})
+                if (postsLikedByUser.length > 0) {
+                    for (let i = 0; i < postsLikedByUser.length; i++) {
+                        const curpost = await Post.findById(postsLikedByUser[i].attrs.post_id);
+                        postIdAndName[`${curpost.attrs.createdAt}`] = [curpost.attrs.username, curpost._id];
+                        postTimes.push(curpost.attrs.createdAt)
+                    }
+                }
+            } catch (e) {
+                console.log(`Couldn't fetch postids. message: ${e}`)
+            }
+            return this.setState({
+                isLoading: false,
+                commentTimes: postTimes.reverse(),
+                commentIDAndName: postIdAndName,
+                displayComments: false,
+                displayReplies: false,
+                displayLiked: true
+            })
+            // username: { type: String, decrypted: true },
+            // liked
         }
     }
     displayFriends = () => {
@@ -263,6 +296,7 @@ class MyProfile extends Component {
         const postStyle = this.state.displayPosts ? selectedStyle : {};
         const commentStyle = this.state.displayComments ? selectedStyle : {};
         const replyStyle = this.state.displayReplies ? selectedStyle : {};
+        const likedStyle = this.state.displayLiked ? selectedStyle : {};
         const settingsForm = (<div className="new-status settings">
             <Row>
                 <Col md={12}>
@@ -441,16 +475,17 @@ class MyProfile extends Component {
                                     <Col className='cur-user-posts-option' style={postStyle} onClick={() => {this.handleFilterPosts('posts')}} >posts</Col>
                                     <Col className='cur-user-posts-option' style={commentStyle} onClick={() => {this.handleFilterPosts('comments')}} >comments</Col>
                                     <Col className='cur-user-posts-option' style={replyStyle} onClick={() => {this.handleFilterPosts('replies')}} >replies</Col>
+                                    <Col className='cur-user-posts-option' style={likedStyle} onClick={() => { this.handleFilterPosts('liked') }} >liked</Col>
                                 </Row>
 
                                 {
                                     this.state.displayPosts ?
                                         <div>{ this.props.curUserOwnPosts.postIDs.length > 0 && this.props.curUserOwnPosts.loaded && !this.state.isLoading && <InfiniteScroll order={this.props.curUserOwnPosts.postIDs} postIdAndName={this.props.curUserOwnPosts.postIDAndName} doneLoading={this.props.curUserOwnPosts.loaded} /> }</div> :
-                                        <InfiniteScroll 
+                                        (<div>{(this.state.displayComments || this.state.displayReplies || this.state.displayLiked) && <InfiniteScroll 
                                         order={this.state.commentTimes} 
                                         postIdAndName={this.state.commentIDAndName} 
                                         doneLoading={!this.state.isLoading} 
-                                        />
+                                        />}</div>)
 
                                 }
                         </Col>
