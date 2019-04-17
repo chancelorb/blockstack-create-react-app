@@ -1,10 +1,10 @@
 # My Block Space
 This is a social networking app built with Blockstack.
-It will be a uncensored social network, build by the ![NYC Blockchain Devs](https://www.meetup.com/nyc-blockchain-devs) and ![me](https://github.com/chancelorb).
+It will be a uncensored social network, build by the [NYC Blockchain Devs](https://www.meetup.com/nyc-blockchain-devs) and [me](https://github.com/chancelorb).
 
 ## Try Demo DApp on your Ganache Test Network
 
-The Demo app is currently only working together with the ![my block space server](https://github.com/chancelorb/my-block-space-server). 
+The Demo app is currently only working together with the [my block space server](https://github.com/chancelorb/my-block-space-server). 
 
 
 ## Run Demo DApp
@@ -30,11 +30,11 @@ mongod --config /usr/local/etc/mongod.conf
 brew services start mongodb-community@4.0
 mongo
 ```
-For more info about installing mongodb checkout the ![mongodb docs](https://docs.mongodb.com/manual/installation/)
+For more info about installing mongodb checkout the [mongodb docs](https://docs.mongodb.com/manual/installation/)
 
 ### 3. Set up Radiks Server
 
-- ![my block space server](https://github.com/chancelorb/my-block-space-server)
+- [my block space server](https://github.com/chancelorb/my-block-space-server)
 
 In a new tab:
 ```
