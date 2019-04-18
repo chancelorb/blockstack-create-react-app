@@ -6,6 +6,7 @@ import PostEngagement from './PostEngagement';
 import { loadUserData, putFile } from 'blockstack';
 import Tag from '../model/tag';
 import PostModel from '../model/post';
+import Linkify from 'linkifyjs/react';
 const avatarFallbackImage = 'https://s3.amazonaws.com/onename/avatar-placeholder.png';
 
 class Post extends Component {
@@ -121,7 +122,7 @@ class Post extends Component {
                         <hr />
                     </div>
                 }
-                {!this.state.fullText && (status.text.length > 500 ? (<pre>{status.text.substring(0, 500)}...<br /><strong className='show-more' onClick={this.showFulltext}>show more</strong></pre>) : <pre>{status.text}</pre>)}
+                {!this.state.fullText && (status.text.length > 500 ? (<pre>{status.text.substring(0, 500)}...<br /><strong className='show-more' onClick={this.showFulltext}>show more</strong></pre>) : <Linkify tagName="pre" options={{}}>{status.text}</Linkify>)}
 
                 {this.state.fullText && <pre>{status.text} <br /><strong className='show-more' onClick={this.showFulltext}>show less</strong></pre>}
                 <div>

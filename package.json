@@ -16,6 +16,7 @@
   },
   "dependencies": {
     "blockstack": "18.3.0",
+    "linkifyjs": "^2.1.8",
     "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
     "radiks": "0.1.10",
