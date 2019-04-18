@@ -58,7 +58,6 @@ class PostEngagement extends Component {
 
     loadPostInfo = async() => {
         const postInfo = await Post.findById(this.props.radiksId);
-        console.log(postInfo)
         const likeInfo = await LikeInfo.fetchList({ username: this.props.curUserInfo.username, post_id: this.props.radiksId }, { decrypt: true });
         if (likeInfo < 1) {
             return this.setState({postInfo, loaded: true})

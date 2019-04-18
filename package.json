@@ -18,7 +18,7 @@
     "blockstack": "18.3.0",
     "lodash": "^4.17.11",
     "node-sass": "^4.11.0",
-    "radiks": "0.1.0",
+    "radiks": "0.1.10",
     "react": "^16.6.3",
     "react-app-rewire-blockstack": "^1.0.7",
     "react-bootstrap": "^1.0.0-beta.5",
