@@ -40,6 +40,7 @@ class Post extends Component {
     }
     showFulltext = () => {
         this.setState({ fullText: !this.state.fullText})
+        console.log(this.props.status.text.split(/\r\n|\r|\n/).slice(0, 6).join('\n'))
     }
     isLocal = () => {
         this.setState({isLocal: this.props.status.username === loadUserData().username ? true : false});
@@ -80,13 +81,6 @@ class Post extends Component {
         this.isLocal();
         this.loadTags()
     }
-    // TODO: finish detect url function
-    linkify = (text) => {
-        const urlRegex = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig;
-        return text.replace(urlRegex, (url) => {
-            return `<a href=${url}> ${url} </a>`;
-        });
-    }
     
 
     render() {
@@ -122,9 +116,9 @@ class Post extends Component {
                         <hr />
                     </div>
                 }
-                {!this.state.fullText && (status.text.length > 500 ? (<pre>{status.text.substring(0, 500)}...<br /><strong className='show-more' onClick={this.showFulltext}>show more</strong></pre>) : <Linkify tagName="pre" options={{}}>{status.text}</Linkify>)}
+                {!this.state.fullText && (status.text.length > 500 || status.text.split(/\r\n|\r|\n/).length > 5 ? (<Linkify tagName="pre" options={{}}>{status.text.substring(0, 500).split(/\r\n|\r|\n/).slice(0, 6).join('\n')}...<br /><strong className='show-more' onClick={this.showFulltext}>show more</strong></Linkify>) : <Linkify tagName="pre" options={{}}>{status.text}</Linkify>)}
 
-                {this.state.fullText && <pre>{status.text} <br /><strong className='show-more' onClick={this.showFulltext}>show less</strong></pre>}
+                {this.state.fullText && <Linkify tagName="pre" options={{}}>{status.text} <br /><strong className='show-more' onClick={this.showFulltext}>show less</strong></Linkify>}
                 <div>
                     {this.state.tags.length > 0 && this.state.tags.map(tag => {
                         return <Link className='post-link' key={tag._id} to={`/tags/${tag.attrs.tag}`}><Badge pill variant="secondary" key={tag.attrs.tag}>{tag.attrs.tag}</Badge>{"  "}</Link>

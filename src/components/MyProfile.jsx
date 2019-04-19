@@ -86,6 +86,8 @@ class MyProfile extends Component {
     async saveNewStatus() {
         let text = this.state.newStatus.trim();
         if (text.length === 0) {return false};
+        text = text.replace(/\n\s*\n\s*\n/g, '\n\n')
+        text = text.replace(/ +(?= )/g, '')
         let createdAt = Date.now();
         const id = uuidv4();
         const options = { encrypt: false }
