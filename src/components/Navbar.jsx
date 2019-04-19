@@ -33,6 +33,14 @@ class Navigationbar extends Component {
             this.setState({ foundUsers: [], searchUser: undefined })
         }
     }
+    handleSearchTag = (e) => {
+        e.preventDefault();
+        if(this.state.searchUser) {
+            const tag = this.state.searchUser.trim();
+            this.props.searchTag(tag)
+            this.setState({ foundUsers: [], searchUser: undefined })
+        }
+    }
     fetchPerson = async () => {
         let url = `https://core.blockstack.org/v1/search?query=${this.state.searchUser}`;
         let resp = await fetch(url)
@@ -93,11 +101,14 @@ class Navigationbar extends Component {
                             <InputGroup size="sm">
                                 <FormControl
                                     type="text"
-                                    placeholder="Search for friends"
+                                    placeholder="Search for"
                                     onChange={e => this.handleChange(e)}
                                 />
                                 <InputGroup.Append>
-                                    <Button variant="outline-secondary" onClick={e => this.handleKeyPress(e)} >Search</Button>
+                                    <Button variant="outline-secondary" onClick={e => this.handleKeyPress(e)} >friends</Button>
+                                </InputGroup.Append>
+                                <InputGroup.Append>
+                                    <Button variant="outline-secondary" onClick={e => this.handleSearchTag(e)} >tags</Button>
                                 </InputGroup.Append>
                             </InputGroup>
                             {this.state.searchUser && <Dropdown.Menu className='user-drop-down' show>

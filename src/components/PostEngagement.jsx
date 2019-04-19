@@ -82,11 +82,11 @@ class PostEngagement extends Component {
             <Row >
                 <Col xs={5}>
                     <Row >
-                        <Col xs={{ span: 2, offset: 1 }}>
+                            <Col xs={{ span: 3, offset: 1 }} className='comment-link'>
                                 <img className='post-icon' src={!this.state.likeInfo.liked ? like : likeFull} alt='like' onClick={this.handleLike} />
                                 {this.state.loaded && <p>{this.state.postInfo.attrs.like_cnt}</p>}
                         </Col>
-                            <Col xs={2}><Link className='comment-link' to={`/post/${this.props.status.username}/${this.state.postInfo._id}`} onClick={() => { this.props.reload() }} ><img className='post-icon' src={Comment} alt='comment' />{this.state.loaded && <p>{this.state.postInfo.attrs.comment_cnt}</p>}</Link>
+                            <Col xs={3}><Link className='comment-link' to={`/post/${this.props.status.username}/${this.state.postInfo._id}`} onClick={() => { this.props.reload() }} ><img className='post-icon' src={Comment} alt='comment' />{this.state.loaded && <p>{this.state.postInfo.attrs.comment_cnt}</p>}</Link>
                         </Col>
                     </Row>
                 </Col>

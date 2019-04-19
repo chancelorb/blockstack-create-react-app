@@ -20,6 +20,7 @@ import { User } from 'radiks'
 import VriendUser from './model/vriendUser'
 import FollowInfo from './model/followInfo';
 import SinglePost from './components/SinglePost';
+import TagPage from './components/TagPage';
 import './App.scss';
 
 
@@ -85,6 +86,9 @@ class App extends Component {
   searchFor = (name) => {
     this.props.history.push(`/users/${name}`)
   }
+  searchTag = (tag) => {
+    this.props.history.push(`/tags/${tag}`)
+  }
 
   render() {
     const {loaded} = this.props.curUserInfo;
@@ -96,6 +100,7 @@ class App extends Component {
           :
           (<div><Navbar
             searchFor={this.searchFor}
+            searchTag={this.searchTag}
            />
           <Switch>
             <Route
@@ -108,6 +113,12 @@ class App extends Component {
               path='/post/:username/:postId'
               render={
                 props => <SinglePost {...props} />
+              }
+            />
+            <Route
+              path='/tags/:tagName'
+              render={
+                props => <TagPage {...props} />
               }
             />
             {loaded && <Route

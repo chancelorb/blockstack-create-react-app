@@ -4,7 +4,7 @@ import {
     getFile,
     putFile,
 } from 'blockstack';
-import { Row, Col, ListGroup, Button, Form, InputGroup, FormControl } from 'react-bootstrap';
+import { Row, Col, ListGroup, Button, Form, InputGroup, FormControl, Alert } from 'react-bootstrap';
 import backPic from '../assets/standard-wallpaper.jpg';
 import settingsIcon from '../assets/settings.svg';
 import cameraIcon from '../assets/camera.svg';
@@ -40,7 +40,8 @@ class MyProfile extends Component {
             displayReplies: false,
             commentTimes: [],
             commentIDAndName: {},
-            displayLiked: false
+            displayLiked: false,
+            textError: false
         };
         this.handleNewStatusChange = this.handleNewStatusChange.bind(this);
         this.handleNewStatusSubmit = this.handleNewStatusSubmit.bind(this);
@@ -85,7 +86,9 @@ class MyProfile extends Component {
 
     async saveNewStatus() {
         let text = this.state.newStatus.trim();
-        if (text.length === 0) {return false};
+        if (text.length === 0 || text.length > 2500) {
+            return false
+        };
         text = text.replace(/\n\s*\n\s*\n/g, '\n\n')
         text = text.replace(/ +(?= )/g, '')
         let createdAt = Date.now();
@@ -113,7 +116,7 @@ class MyProfile extends Component {
         try {
             await putFile(`post${id}.json`, JSON.stringify(post), options)
             await radiksPost.save()
-            const tagArray = _.uniq(_.split(this.state.tags, ' '));
+            const tagArray = _.uniq(_.split(this.state.tags, ' ')).slice(0, 30);
             if (tagArray.length > 0) {
                 for (let i = 0; i < tagArray.length; i++) {
                     if (tagArray[i].length > 0) {
@@ -129,10 +132,15 @@ class MyProfile extends Component {
         } catch {
             console.log('somehthing went wrong with creating the post please try again')
         }
-        return [this.setState({ isLoading: true, newStatus: "", tags: "", newImage: false}), this.fetchData()]
+        return [this.setState({ isLoading: true, newStatus: "", tags: "", newImage: false, textError: false}), this.fetchData()]
     }
 
     handleNewStatusChange(event) {
+        if (event.target.name === 'newStatus' && event.target.value.length > 2499) {
+            this.setState({
+                textError: true
+            })
+        }
         this.setState({ [event.target.name]: event.target.value })
     }
     captureFile = (event) => {
@@ -433,6 +441,9 @@ class MyProfile extends Component {
                                                     placeholder="What's on your mind?"
                                                 />
                                             </InputGroup>
+                                            {this.state.textError && <Alert key={'text-warning'} variant={'warning'}>
+                                                Character limit is 25000, you are on {this.state.newStatus.length} characters.
+                                            </Alert>}
                                             <InputGroup size="sm" className="mb-3">
                                                 <InputGroup.Prepend>
                                                     <InputGroup.Text id="inputGroup-sizing-sm">Tags</InputGroup.Text>
@@ -443,7 +454,7 @@ class MyProfile extends Component {
                                                 value={this.state.tags}
                                                 name='tags'
                                                 onChange={e => this.handleNewStatusChange(e)}
-                                                placeholder="Separate tags by space"
+                                                placeholder="Separate tags by space, max 30 tags"
                                                 />
                                             </InputGroup>
                                     </Col>

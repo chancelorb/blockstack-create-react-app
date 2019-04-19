@@ -238,7 +238,7 @@ blue/grey #394954 */
   padding: 0;
   height: 33vh;
   background-size: cover;
-  background-attachment: fixed;
+  // background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
   z-index: 0;
@@ -555,7 +555,12 @@ hr {
 .comment-link {
   text-decoration: none!important;
   color: #000!important;
-  display: contents;
+  display: inline-flex;
+}
+.tag-con {
+  padding: 1.3em;
+  text-align: left;
+
 }
 
 div.col-2{
@@ -574,7 +579,8 @@ div.col-2{
   }
 
   .post-icon {
-    padding: 0.3em;
+    padding: 0.5em;
+    margin: 0.4em;
   }
 }
 @media only screen and (max-width: 768px) {
